@@ -16,7 +16,7 @@ def load_employee_data():
         for i in range(len(header)):
             dict_row[header[i]] = current_row[i]
         list_data.append(dict_row)
-    print(list_data)
+
     return list_data
 
 
@@ -29,9 +29,10 @@ def add_employee(name):
     today = today.strftime("%d/%m/%Y")
     record = {}
     emp_id = len(list(csv_reader)) + 1
+
     csvwriter = csv.DictWriter(csv_file, header)
     record[header[0]] = emp_id
     record[header[1]] = name
     record[header[2]] = today
-    print(record)
+
     csvwriter.writerow(record)
