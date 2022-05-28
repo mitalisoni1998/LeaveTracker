@@ -20,13 +20,13 @@ def load_employee_data():
     return list_data
 
 
-def add_employee(name):
+def add_employee(name, gender):
     csv_file = open("/Users/sonmit01/Documents/Data/empData.csv", mode='r+', encoding='UTF8', newline='')
     csv_reader = csv.reader(csv_file)
     header = []
     header = next(csv_reader)
     today = date.today()
-    today = today.strftime("%d/%m/%Y")
+    today = today.strftime("%m/%d/%Y")
     record = {}
     emp_id = len(list(csv_reader)) + 1
 
@@ -34,5 +34,6 @@ def add_employee(name):
     record[header[0]] = emp_id
     record[header[1]] = name
     record[header[2]] = today
+    record[header[3]] = gender
 
     csvwriter.writerow(record)
