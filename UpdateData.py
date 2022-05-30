@@ -9,6 +9,7 @@ import logging
 from datetime import timedelta
 import json
 import ast
+import sys
 
 data_file = "/Users/sonmit01/Documents/Data/EmployeeLeaveData.csv"
 
@@ -100,6 +101,7 @@ def add_compoff(emp_id, no_of_days):
 
     if not is_present:
         logging.exception("EmpId {} not found!".format(emp_id))
+        sys.exit()
 
     list_keys = list(list_data[0].keys())
     csv_file = open(data_file, mode='r+', encoding='UTF8', newline='')
@@ -121,7 +123,7 @@ def remove_compoff(emp_id, no_of_days, start_dt, end_dt):
         is_present = False
         if record['empId'] == str(emp_id):
             is_present = True
-            dict_compoff = ast.literal_eval(record['CompOff'])
+            dict_compoff = ast.literal_eval(record['CompOff'])  # Convert dictionary string to a dictionary object
             dict_compoff_keys = list(dict_compoff.keys())
             if len(dict_compoff) == 1:
                 compoff_available = int(dict_compoff[dict_compoff_keys[0]])
@@ -165,6 +167,7 @@ def remove_compoff(emp_id, no_of_days, start_dt, end_dt):
 
     if not is_present:
         logging.exception("EmpId {} not found!".format(emp_id))
+        sys.exit()
 
     list_keys = list(list_data[0].keys())
     csv_file = open(data_file, mode='r+', encoding='UTF8', newline='')
@@ -175,12 +178,13 @@ def remove_compoff(emp_id, no_of_days, start_dt, end_dt):
         csvwriter.writerow(updated_record)
     return True
 
+
 def update_ooo(emp_id, no_of_leaves, start_dt, end_dt):
     """To update out of office(OOO) leaves in csv file"""
     list_data = cf.csv_to_dict(data_file)
 
-    start = datetime.strptime(start_dt, "%m/%d/%Y")
-    end = datetime.strptime(end_dt, "%m/%d/%Y")
+    start = (datetime.strptime(start_dt, "%m/%d/%Y")).date()
+    end = (datetime.strptime(end_dt, "%m/%d/%Y")).date()
 
     for record in list_data:
         is_present = False
@@ -190,8 +194,10 @@ def update_ooo(emp_id, no_of_leaves, start_dt, end_dt):
             record['LeaveAppliedTo'] = end
             record['FlagLeaveApplied'] = True
             is_present = True
+            break
     if not is_present:
         logging.exception("EmpId {} not found!".format(emp_id))
+        sys.exit()
 
     list_keys = list(list_data[0].keys())
     csv_file = open(data_file, mode='r+', encoding='UTF8', newline='')
@@ -206,21 +212,23 @@ def update_maternity(emp_id, start_dt):
     """To update maternity leave flag along with leave start and end date"""
     list_data = cf.csv_to_dict(data_file)
 
-    start = datetime.strptime(start_dt, "%m/%d/%Y")
+    start = (datetime.strptime(start_dt, "%m/%d/%Y")).date()
     end_dt = start + timedelta(days=28)
-    end_dt = end_dt.strftime("%m/%d/%Y")
+    end_dt = end_dt.strftime("%Y-%m-%d")
 
     for record in list_data:
         is_present = False
         if record['empId'] == str(emp_id):
             record['FlagMaternity'] = True
-            record['LeaveAppliedFrom'] = start_dt
+            record['LeaveAppliedFrom'] = start
             record['LeaveAppliedTo'] = end_dt
+            record['Maternity'] = 0
             is_present = True
             break
 
     if not is_present:
         logging.exception("EmpId {} not found!".format(emp_id))
+        sys.exit()
 
     list_keys = list(list_data[0].keys())
     csv_file = open(data_file, mode='r+', encoding='UTF8', newline='')
@@ -235,21 +243,23 @@ def update_paternity(emp_id, start_dt):
     """To update paternity leave flag along with leave start and end date"""
     list_data = cf.csv_to_dict(data_file)
 
-    start = datetime.strptime(start_dt, "%m/%d/%Y")
+    start = (datetime.strptime(start_dt, "%m/%d/%Y")).date()
     end_dt = start + timedelta(days=168)
-    end_dt = end_dt.strftime("%m/%d/%Y")
+    end_dt = end_dt.strftime("%Y-%m-%d")
 
     for record in list_data:
         is_present = False
         if record['empId'] == str(emp_id):
             record['FlagPaternity'] = True
-            record['LeaveAppliedFrom'] = start_dt
+            record['LeaveAppliedFrom'] = start
             record['LeaveAppliedTo'] = end_dt
+            record['Paternity'] = 0
             is_present = True
             break
 
     if not is_present:
         logging.exception("EmpId {} not found!".format(emp_id))
+        sys.exit()
 
     list_keys = list(list_data[0].keys())
     csv_file = open(data_file, mode='r+', encoding='UTF8', newline='')
