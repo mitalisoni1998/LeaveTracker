@@ -1,4 +1,7 @@
 import csv
+from datetime import datetime
+import Constants
+import logging
 
 
 def csv_to_dict(file):
@@ -17,3 +20,15 @@ def csv_to_dict(file):
         list_data.append(dict_row)
 
     return list_data
+
+
+def verify_weekend_holiday(date):
+    current_date = (datetime.strptime(date, '%m/%d/%Y')).date()
+    current_date_str = current_date.strftime('%Y-%m-%d')
+    if current_date_str in Constants.get_public_holidays():
+        return True
+    elif current_date.weekday() > 4:
+        return True
+    else:
+        return False
+

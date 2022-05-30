@@ -75,3 +75,21 @@ def verify_leave_not_applied(emp_id, start_dt, end_dt):
                     else:
                         leave_start = leave_start + timedelta(days=1)
                 return False
+
+
+def check_compoff(emp_id):
+    balance_compoff = int(get_compoff(emp_id))
+    if balance_compoff == -1:
+        logging.exception("Invalid emp id {}".format(emp_id))
+        sys.exit()
+    else:
+        print("The number of available compoffs for you are: {}".format(balance_compoff))
+
+
+def check_leave_balance(emp_id):
+    balance_ooo = int(get_ooo(emp_id))
+    if balance_ooo == -1:
+        logging.exception("Invalid emp id {}".format(emp_id))
+        sys.exit()
+    else:
+        print("The number of available leaves for you are: {}".format(balance_ooo))

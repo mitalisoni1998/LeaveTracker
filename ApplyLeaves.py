@@ -89,7 +89,7 @@ def no_of_weekdays(start_dt, end_dt):
 
     # generating total days using busday_count()
     count_weekdays = np.busday_count(start.strftime('%Y-%m-%d'), end.strftime('%Y-%m-%d'),
-                                     holidays=const.public_holidays)
+                                     holidays=const.get_public_holidays())
 
     return count_weekdays
 

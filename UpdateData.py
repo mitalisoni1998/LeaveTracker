@@ -19,7 +19,7 @@ def create_db():
 
     header = ['empId', 'Name', 'JoiningDate', 'Gender', 'OooLeaves', 'CompOff', 'Paternity', 'Maternity',
               'FlagMaternity', 'FlagPaternity',
-              'FlagLeaveApplied', 'LeaveAppliedFrom', 'LeaveAppliedTo', 'NoOfLeavesApplied']
+              'FlagLeaveApplied', 'LeaveAppliedFrom', 'LeaveAppliedTo', 'NoOfLeavesApplied', 'OooUpdateDate']
 
     list_empdata = ed.load_employee_data()
     csv_file = open(data_file, mode='w')
@@ -47,6 +47,7 @@ def create_db():
             record_leave['LeaveAppliedFrom'] = ''
             record_leave['LeaveAppliedTo'] = ''
             record_leave['NoOfLeavesApplied'] = 0
+            record_leave['OooUpdateDate'] = date.today()
 
             ooo_leaves = get_no_of_months(record_leave['JoiningDate']) * 2
             if ooo_leaves > 40:
@@ -193,6 +194,7 @@ def update_ooo(emp_id, no_of_leaves, start_dt, end_dt):
             record['LeaveAppliedFrom'] = start
             record['LeaveAppliedTo'] = end
             record['FlagLeaveApplied'] = True
+            record['NoOfLeavesApplied'] = no_of_leaves
             is_present = True
             break
     if not is_present:
@@ -295,5 +297,6 @@ def add_employee(dict_record):
     record_leave['LeaveAppliedTo'] = ''
     record_leave['NoOfLeavesApplied'] = 0
     record_leave['OooLeaves'] = 0
+    record_leave['OooUpdateDate'] = date.today()
 
     csvwriter.writerow(record_leave)
